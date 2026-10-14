@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>UNIVER MOUDMA — Connexion du bot</title>
+<meta name="description" content="UNIVER MOUDMA : bot WhatsApp privé. Connecte le numéro du propriétaire avec un code de jumelage.">
+<meta property="og:title" content="UNIVER MOUDMA — Bot WhatsApp">
+<meta property="og:image" content="https://i.ibb.co/XkbtKFdM/IMG-20261013-WA1183.jpg">
+<link rel="icon" href="https://i.ibb.co/XkbtKFdM/IMG-20261013-WA1183.jpg">
+<meta name="theme-color" content="#0b0b0f">
+<style>
+:root{--bg:#0b0b0f;--card:#14141b;--line:#262633;--txt:#f2f2f7;--mut:#9a9ab0;--a:#ffb938;--b:#ff5a36;--ok:#27d17f;--err:#ff5a5a;color-scheme:dark}
+@media (prefers-color-scheme:light){:root{--bg:#f6f4ef;--card:#fff;--line:#e3dfd5;--txt:#1b1b22;--mut:#6b6b7a;color-scheme:light}}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(900px 500px at 50% -10%,rgba(255,138,0,.18),transparent 60%),var(--bg);color:var(--txt);min-height:100vh;padding:max(18px,env(safe-area-inset-top)) 16px max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center}
+.wrap{width:100%;max-width:460px;margin:auto 0}
+.logo{display:block;width:104px;height:104px;border-radius:50%;object-fit:cover;margin:0 auto 14px;border:3px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(135deg,var(--a),var(--b)) border-box;box-shadow:0 10px 40px rgba(255,90,54,.3)}
+h1{margin:0;text-align:center;font-size:1.9rem;letter-spacing:.06em;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{text-align:center;color:var(--mut);margin:6px 0 22px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+label{display:block;font-size:.82rem;color:var(--mut);margin-bottom:8px}
+input{width:100%;font-size:1.15rem;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--txt);outline:none;letter-spacing:.04em}
+input:focus{border-color:var(--a)}
+button{width:100%;margin-top:14px;padding:15px;border:0;border-radius:14px;font-size:1rem;font-weight:700;color:#1a1100;background:linear-gradient(90deg,var(--a),var(--b));cursor:pointer}
+button:disabled{opacity:.6}
+.msg{margin-top:14px;font-size:.92rem;text-align:center;display:none}
+.msg.ok{display:block;color:var(--ok)}.msg.err{display:block;color:var(--err)}
+.code{display:none;margin-top:18px;text-align:center}
+.digits{font-size:2.3rem;font-weight:800;letter-spacing:.18em;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.how{margin:18px 0 0;padding:0;list-style:none;color:var(--mut);font-size:.9rem;line-height:1.6}
+.how b{color:var(--txt)}
+.copy{background:transparent;border:1px solid var(--line);color:var(--txt);font-weight:600;margin-top:10px}
+footer{margin-top:22px;text-align:center;color:var(--mut);font-size:.8rem}
+footer b{color:var(--txt)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <img class="logo" src="https://i.ibb.co/XkbtKFdM/IMG-20261013-WA1183.jpg" alt="UNIVER MOUDMA" onerror="this.style.display='none'">
+  <h1>UNIVER MOUDMA</h1>
+  <p class="sub">Bot WhatsApp privé · connexion du propriétaire</p>
+
+  <section class="card">
+    <label for="num">Numéro WhatsApp avec l'indicatif, sans « + »</label>
+    <input id="num" type="tel" inputmode="numeric" autocomplete="tel" placeholder="224623068725" maxlength="16">
+    <button id="go">Générer mon code</button>
+    <div class="msg" id="msg"></div>
+
+    <div class="code" id="codeBox">
+      <div class="digits" id="digits">----</div>
+      <button class="copy" id="copy">📋 Copier le code</button>
+      <ul class="how">
+        <li>1. Ouvre <b>WhatsApp</b> ▸ <b>Appareils connectés</b></li>
+        <li>2. Touche <b>Connecter un appareil</b></li>
+        <li>3. Choisis <b>Se connecter avec un numéro de téléphone</b></li>
+        <li>4. Saisis le code ci-dessus</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>Écris <b>.menu</b> dans WhatsApp quand c'est connecté.<br>✦ Propulsé par <b>CENTRAL-HEX</b> ✦</footer>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const show=(t,x)=>{const m=$('#msg');m.className='msg '+t;m.textContent=x};
+let timer;
+async function post(u,b){const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Erreur serveur');return d}
+$('#go').onclick=async()=>{
+  const n=$('#num').value.replace(/\D/g,''),b=$('#go');
+  $('#msg').className='msg';$('#codeBox').style.display='none';clearInterval(timer);
+  if(n.length<8)return show('err',"Entre ton numéro complet avec l'indicatif (ex : 224623068725).");
+  b.disabled=true;b.textContent='Génération du code…';
+  try{
+    const{code}=await post('/api/pair',{number:n});
+    $('#digits').textContent=code;$('#codeBox').style.display='block';
+    show('ok','Code généré ! Saisis-le dans WhatsApp dans la minute.');
+    timer=setInterval(async()=>{try{const s=await(await fetch('/api/pair/status?number='+n)).json();if(s.connected){clearInterval(timer);show('ok','🎉 Connecté ! Écris .menu dans WhatsApp.')}}catch{}},3000);
+  }catch(e){show('err',e.message)}
+  b.disabled=false;b.textContent='Générer un nouveau code';
+};
+$('#copy').onclick=async()=>{try{await navigator.clipboard.writeText($('#digits').textContent.replace('-',''));$('#copy').textContent='✅ Copié !';setTimeout(()=>$('#copy').textContent='📋 Copier le code',1800)}catch{}};
+</script>
+</body>
+</html>
