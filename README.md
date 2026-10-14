@@ -9,6 +9,25 @@
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&duration=2800&pause=900&color=16A34A&center=true&vCenter=true&multiline=true&repeat=true&width=560&height=80&lines=Aucun+pr%C3%A9fixe+%E2%80%94+tape+juste+%22menu%22;Connexion+via+QR+ou+Code+Pair;Actif+24%2F24+%E2%80%A2+7%2F7;Syst%C3%A8me+CENTRAL-HEX" alt="typing animation" />
 
 <br/>
+# UNIVER MOUDMA
+
+Bot WhatsApp privé, basé sur **CENTRAL-HEX**. Préfixe par défaut : `.`
+
+## Déploiement (Render, Docker)
+1. Pousse ce dossier sur un dépôt GitHub **privé**, puis crée un *Web Service* Docker sur Render.
+2. Variables d'environnement conseillées :
+   - `OWNER_NUMBER` : numéro du propriétaire avec l'indicatif, sans « + » (par défaut `224623068725`)
+   - `ADMIN_PASSWORD` : mot de passe du panneau `/admin` (désactivé si vide)
+   - `PREFIX` : préfixe des commandes (par défaut `.`)
+   - `SCRIPT_URL` : lien affiché par la commande `.script` (optionnel)
+3. Ouvre l'adresse du service, saisis le numéro du propriétaire, puis entre le code dans
+   WhatsApp ▸ Appareils connectés ▸ Se connecter avec un numéro de téléphone.
+4. Écris `.menu` dans WhatsApp.
+
+Seul le numéro propriétaire peut connecter le bot (`LOCK_TO_OWNER`, actif par défaut).
+
+## Ajouter une commande
+Dépose un fichier dans `commands/` : il est chargé automatiquement.
 
 ![Node](https://img.shields.io/badge/Node.js-18%2B-16A34A?style=for-the-badge&logo=node.js&logoColor=white)
 ![Baileys](https://img.shields.io/badge/Baileys-WhatsApp%20API-0F3D2E?style=for-the-badge&logo=whatsapp&logoColor=white)
